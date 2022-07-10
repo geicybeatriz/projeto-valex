@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
+import { createNewCard } from "../services/createCardServices.js";
 
 
 export async function createCard(req:Request, res:Response){
-    console.log("body", req.body);
     const {apiKey} = res.locals;
-    
-    try {
-        res.sendStatus(200);
-    } catch (error) {
-        res.status(500).send(error);
-    }
+    const {employeeId, type} = req.body;
+
+    //console.log("body", req.body, apiKey);
+    const newCard = await createNewCard(apiKey, employeeId, type);
+        
+    return res.sendStatus(200);
 }
