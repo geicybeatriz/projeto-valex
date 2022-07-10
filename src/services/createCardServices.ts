@@ -64,7 +64,7 @@ async function modelNewCard(employeeId:string, type:TransactionTypes){
         employeeId: parseInt(employeeId),
         number: numberCard,
         cardholderName: cardholderName,
-        securityCode: numberCVV,
+        securityCode: numberCVV.encrypted,
         expirationDate: expirationDate,
         password: password,
         isVirtual: false,
@@ -75,7 +75,7 @@ async function modelNewCard(employeeId:string, type:TransactionTypes){
 
     const card = await insert(cardData);
     
-    return card;
+    return {card:card, numberCVV: numberCVV.decrypted};
 
 }
 
@@ -86,7 +86,7 @@ function setNumberCard(){
 function setSecurityCode(){
     const CVV = faker.finance.creditCardCVV();
     const cryptr = new Cryptr('myTotallySecretKey');
-    return cryptr.encrypt(CVV);
+    return {encrypted:cryptr.encrypt(CVV), decrypted:cryptr.decrypt(CVV)};
 }
 
 function setExpirationDate(){
