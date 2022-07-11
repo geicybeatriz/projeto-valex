@@ -1,4 +1,5 @@
 import {findById, update} from "../repositories/cardRepository.js";
+import { findByApiKey } from "../repositories/companyRepository.js";
 import Cryptr from "cryptr";
 import * as bcrypt from "bcrypt";
 import dayjs from "dayjs";
@@ -67,4 +68,9 @@ export async function saveNewStatus(id: number, currentStatus:boolean){
     const newStatus = !currentStatus;
     await update(id,{isBlocked:newStatus});
     return newStatus;
+}
+
+export async function findCompanyByApiKey(apiKey:any){
+    const companyExist = await findByApiKey(apiKey);
+    if(!companyExist) throw {type:"notFound", message:"not found"};
 }

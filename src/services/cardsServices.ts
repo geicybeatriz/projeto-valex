@@ -78,3 +78,4 @@ export async function lockUnlockCard(cardId:number, password:string){
     const newStatus = await saveNewStatus(cardId, card.isBlocked);
     return newStatus;
 }
+
