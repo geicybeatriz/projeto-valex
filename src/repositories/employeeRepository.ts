@@ -13,6 +13,6 @@ export async function findById(id: number) {
     "SELECT * FROM employees WHERE id=$1",
     [id]
   );
-
+    //console.log(result);
   return result.rows[0];
 }

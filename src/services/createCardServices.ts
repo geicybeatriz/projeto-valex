@@ -10,13 +10,13 @@ export async function createNewCard(apiKey: string, employeeId:string, type:Tran
     const company = await verifyCompany(apiKey);
     const employee = await verifyEmployee(employeeId);
     const card = await verifyCardByTypeAndEmployeeId(employeeId, type);
-    
+    //console.log("card", card);
+
     return {
-        company:company, 
-        employee:employee,
+        company:company.id, 
+        employee:employee.id,
         card:card
     };
-
 }
 
 async function verifyCompany(apiKey:string){
@@ -31,7 +31,7 @@ async function verifyCompany(apiKey:string){
 async function verifyEmployee(employeeId: string){
     const checkEmployee = await findById(parseInt(employeeId));
     if(!checkEmployee) throw {
-        type: "not_found",
+        type: "notFound",
         message: "employee not found"
     }
     return checkEmployee;
@@ -48,8 +48,6 @@ async function verifyCardByTypeAndEmployeeId(employeeId:string, type:Transaction
             message: "the employee already has this card"
         }
     }
-    return checkCardExists;
-
 }
 
 async function modelNewCard(employeeId:string, type:TransactionTypes){
@@ -72,21 +70,25 @@ async function modelNewCard(employeeId:string, type:TransactionTypes){
         isBlocked:true,
         type: type
     }
-
-    const card = await insert(cardData);
+    const newCard = await insert(cardData);
+    console.log(newCard);
     
-    return {card:card, numberCVV: numberCVV.decrypted};
+    return {numberCard:cardData.number, 
+            numberCVV: numberCVV.decrypted,
+            name: cardData.cardholderName,
+            expirationDate: cardData.expirationDate
+    };
 
 }
 
 function setNumberCard(){
-    return faker.finance.creditCardNumber();
+    return faker.finance.creditCardNumber('####-####-####-####');
 }
 
 function setSecurityCode(){
     const CVV = faker.finance.creditCardCVV();
     const cryptr = new Cryptr('myTotallySecretKey');
-    return {encrypted:cryptr.encrypt(CVV), decrypted:cryptr.decrypt(CVV)};
+    return {encrypted:cryptr.encrypt(CVV), decrypted:CVV};
 }
 
 function setExpirationDate(){

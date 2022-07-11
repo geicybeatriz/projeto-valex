@@ -9,20 +9,18 @@ export async function activeCard(cardId:string, securityCode:string, password:st
     const verifyCard = await verifyCardById(cardId);
     const security = await verifySecurityCode(verifyCard.securityCode, securityCode);
     const hashPassword = await setHashPassword(password);
-
-    const updatedCard = await updateCardData(cardId, hashPassword);
-
-    return updatedCard;
+    await updateCardData(cardId, hashPassword);
+    return ("ok");
 }
 
 async function verifyCardById(cardId:string){
     const card = await findById(parseInt(cardId));
 
-    if(!card) throw {type:"not_found", message:"card not found"}
+    if(!card) throw {type:"notFound", message:"card not found"}
     if(card.password !== null) throw {type:"conflict", message:"this card is already active"};
 
     if(dayjs(card.expirationDate).isBefore(dayjs(Date.now()).format("MM-YY"))) throw { 
-        type:"unprocessable_entity", 
+        type:"unprocessable", 
         message:"invalid card"
     };
 
@@ -50,6 +48,6 @@ async function updateCardData(cardId:string,password:string){
         password:password, 
         isBlocked: false
     }
-    const updateData = await update(parseInt(cardId), newCardData);
-    return updateData;
+    await update(parseInt(cardId), newCardData);
+    return ("cartão ativado");
 }

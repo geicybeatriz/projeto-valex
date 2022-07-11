@@ -12,7 +12,11 @@ export function unauthorizedError() {
 }
 
 export function unprocessableEntity(){
-    return {type: "unprocessable entity"}
+    return {type: "unprocessable entity"};
+}
+
+export function notFound(){
+    return {type: "not found"};
 }
 
 export default function handleErrorsMiddleware(error: { type: string | number; }, req:Request, res:Response, next:NextFunction) {
@@ -20,6 +24,6 @@ export default function handleErrorsMiddleware(error: { type: string | number; }
         res.sendStatus(serviceErrorToStatusCode[error.type]);
     }
 
-    res.sendStatus(500);
+    res.status(500);
 }
 
