@@ -28,8 +28,6 @@ export async function getCardByEmployeeId(req:Request, res:Response){
     res.status(200).send(card);
 }
 
-
-
 export async function getTransactionsByCard(req:Request, res:Response){
     const cardId = parseInt(req.params.cardId);
     const transactions = await getCardTransactions(cardId);
