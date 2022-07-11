@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { findByApiKey } from "../repositories/companyRepository.js";
 import apiKeySchema from "../schemas/apikeySchema.js";
 
 export default async function apiKeyValidate(req: Request, res:Response, next:NextFunction){

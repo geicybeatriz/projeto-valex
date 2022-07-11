@@ -1,8 +1,8 @@
 import { verifyCardById, verifyExpirationDate, verifySecurityCode, setHashPassword, isNullPassword, verifyEmployeeCard, verifyPassword, verifyIsBlocked, saveNewStatus } from "../utils/cardUtils.js";
 
-import { findById, update } from "../repositories/cardRepository.js";
+import { update } from "../repositories/cardRepository.js";
 import { findByCardId } from "../repositories/paymentRepository.js";
-import {findRechargeByCardId} from "../repositories/rechargeRepository.js";
+import { findRechargeByCardId } from "../repositories/rechargeRepository.js";
 import Cryptr from "cryptr";
 
 const cryptr = new Cryptr('myTotallySecretKey');
