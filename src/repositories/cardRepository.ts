@@ -123,3 +123,10 @@ export async function update(id: number, cardData: CardUpdateData) {
 export async function remove(id: number) {
   connection.query<any, [number]>("DELETE FROM cards WHERE id=$1", [id]);
 }
+
+export async function getCardByEmployeeAndId(cardId:number, employeeId:number){
+  return await connection.query<Card, [number, number]>(
+    `SELECT * FROM cards WHERE id=$1 AND "employeeId"=$2`,
+    [cardId, employeeId]
+  );
+}

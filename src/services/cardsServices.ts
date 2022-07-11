@@ -1,4 +1,4 @@
-import { findById, update } from "../repositories/cardRepository.js";
+import { findById, getCardByEmployeeAndId, update } from "../repositories/cardRepository.js";
 import Cryptr from "cryptr";
 import * as bcrypt from "bcrypt";
 import dayjs from "dayjs";
@@ -50,4 +50,26 @@ async function updateCardData(cardId:string,password:string){
     }
     await update(parseInt(cardId), newCardData);
     return ("cartão ativado");
+}
+
+export async function getEmployeeCard(employeeId:number, cardId:number, password:any){
+    const cryptr = new Cryptr('myTotallySecretKey');
+    const card = await findById(cardId);
+    console.log(card);
+
+    if(!card) throw {type:"notFound", message:"card is not found"};
+    if(card.employeeId !== employeeId ) throw {type:"unauthorized",message:"access denied"};
+
+    const decryptPass = await bcrypt.compare(password, card.password);
+    if((card.employeeId === employeeId) && (!decryptPass || card.isBlocked)) throw {type:"unauthorized", message:"incorrect password"};
+
+    const decryptedString = cryptr.decrypt(card.securityCode);
+    const employeeCard = {
+        number: card.number,
+        cardholderName: card.cardholderName,
+        expirationDate: card.expirationDate,
+        securityCode: decryptedString
+    };
+
+    return employeeCard;
 }
