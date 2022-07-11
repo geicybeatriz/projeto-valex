@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { activateCard, createCard } from "../constrollers/cardsControllers.js";
+import { activateCard, createCard } from "../controllers/cardsControllers.js";
 import apiKeyValidate from "../middlewares/apiKeyValidation.js";
 import validateSchemas from "../middlewares/schemasValidate.js";
 import {activateCardSchema, createCardSchema} from "../schemas/cardCreateSchema.js";
