@@ -1,4 +1,4 @@
-import { verifyCardById, verifyExpirationDate, verifySecurityCode, setHashPassword, isNullPassword, verifyEmployeeCard, verifyPassword, verifyIsBlocked } from "../utils/cardUtils.js";
+import { verifyCardById, verifyExpirationDate, verifySecurityCode, setHashPassword, isNullPassword, verifyEmployeeCard, verifyPassword, verifyIsBlocked, saveNewStatus } from "../utils/cardUtils.js";
 
 import { findById, update } from "../repositories/cardRepository.js";
 import { findByCardId } from "../repositories/paymentRepository.js";
@@ -27,11 +27,11 @@ async function updateCardData(cardId:string,password:string){
     return ("cartão ativado");
 }
 
-export async function getEmployeeCard(employeeId:number, cardId:number, password:any){
+export async function getEmployeeCard(employeeId:number, cardId:number, password:string){
     const card = await verifyCardById(cardId);
     const isEmployee = await verifyEmployeeCard(card.employeeId, employeeId);
     if(isEmployee){
-        await verifyPassword(card, password);
+        await verifyPassword(card.password, password);
         await verifyIsBlocked(card.isBlocked);
     }
 
@@ -70,4 +70,11 @@ async function getTotal(transactions:any[]){
     return sum;
 }
 
+export async function lockUnlockCard(cardId:number, password:string){
+    const card = await verifyCardById(cardId);
+    await verifyExpirationDate(card.expirationDate);
+    await verifyPassword(card.password, password);
 
+    const newStatus = await saveNewStatus(cardId, card.isBlocked);
+    return newStatus;
+}

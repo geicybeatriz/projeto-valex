@@ -1,4 +1,4 @@
-import {findById} from "../repositories/cardRepository.js";
+import {findById, update} from "../repositories/cardRepository.js";
 import Cryptr from "cryptr";
 import * as bcrypt from "bcrypt";
 import dayjs from "dayjs";
@@ -54,8 +54,8 @@ export async function verifyIsBlocked(isBlocked: boolean){
     return false;
 }
 
-export async function verifyPassword(card:any, password:any){
-    const decryptPass = await bcrypt.compare(password, card.password);
+export async function verifyPassword(currentPassword:string, password:string){
+    const decryptPass = await bcrypt.compare(password, currentPassword);
     if(!decryptPass) throw {
         type: "unauthorized",
         message: "incorrect password"
@@ -63,3 +63,8 @@ export async function verifyPassword(card:any, password:any){
     return decryptPass;
 }
 
+export async function saveNewStatus(id: number, currentStatus:boolean){
+    const newStatus = !currentStatus;
+    await update(id,{isBlocked:newStatus});
+    return newStatus;
+}
