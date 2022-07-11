@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { activeCard, getEmployeeCard } from "../services/cardsServices.js";
+import { activeCard, getCardTransactions, getEmployeeCard } from "../services/cardsServices.js";
 import { createNewCard } from "../services/createCardServices.js";
-
 
 export async function createCard(req:Request, res:Response){
     const {apiKey} = res.locals;
@@ -27,4 +26,13 @@ export async function getCardByEmployeeId(req:Request, res:Response){
 
     const card = await getEmployeeCard(employeeId, cardId, password);
     res.status(200).send(card);
+}
+
+
+
+export async function getTransactionsByCard(req:Request, res:Response){
+    const cardId = parseInt(req.params.cardId);
+    const transactions = await getCardTransactions(cardId);
+    
+    res.status(200).send(transactions)
 }

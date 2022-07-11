@@ -1,9 +1,13 @@
-import { findById, getCardByEmployeeAndId, update } from "../repositories/cardRepository.js";
+import { findById, update } from "../repositories/cardRepository.js";
 import Cryptr from "cryptr";
 import * as bcrypt from "bcrypt";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
+import { findByCardId } from "../repositories/paymentRepository.js";
+import {findRechargeByCardId} from "../repositories/rechargeRepository.js"
 dayjs.extend(customParseFormat);
+
+const cryptr = new Cryptr('myTotallySecretKey');
 
 export async function activeCard(cardId:string, securityCode:string, password:string){
     const verifyCard = await verifyCardById(cardId);
@@ -28,9 +32,7 @@ async function verifyCardById(cardId:string){
 }
 
 async function verifySecurityCode(cardSecurityCode:string, securityCode:string){
-    const cryptr = new Cryptr('myTotallySecretKey');
     const decryptedString = cryptr.decrypt(cardSecurityCode);
-
     if(decryptedString !== securityCode) throw {
         type:"unauthorized",
         message: "security code error"
@@ -53,9 +55,7 @@ async function updateCardData(cardId:string,password:string){
 }
 
 export async function getEmployeeCard(employeeId:number, cardId:number, password:any){
-    const cryptr = new Cryptr('myTotallySecretKey');
     const card = await findById(cardId);
-    console.log(card);
 
     if(!card) throw {type:"notFound", message:"card is not found"};
     if(card.employeeId !== employeeId ) throw {type:"unauthorized",message:"access denied"};
@@ -73,3 +73,29 @@ export async function getEmployeeCard(employeeId:number, cardId:number, password
 
     return employeeCard;
 }
+
+export async function getCardTransactions(cardId: number){
+    const card = await findById(cardId);
+    if(!card) throw {type:"notFound", message:"card not found"};
+
+    const transactions = await findByCardId(cardId);
+    const totalTransactions = await getTotal(transactions);
+    const recharges = await findRechargeByCardId(cardId);
+    const totalRecharges = await getTotal(recharges);
+    
+    return {balance: totalRecharges-totalTransactions, 
+            transactions:transactions, 
+            recharges:recharges 
+    };
+}
+
+async function getTotal(transactions:any[]){
+    if(transactions.length === 0) return 0;
+
+    const arr = [];
+    transactions.forEach((pay) => arr.push(pay.amount));
+    const sum = arr.reduce((total, a) => total += a);
+    return sum;
+}
+
+
