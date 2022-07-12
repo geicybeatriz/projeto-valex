@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { dataValidation } from "../services/purchaseServices.js";
+import { dataValidation, insertVirtualPurchase } from "../services/purchaseServices.js";
 
 export async function addPurchase(req:Request, res:Response){
     const cardId = parseInt(req.body.cardId);
@@ -14,5 +14,11 @@ export async function addPurchase(req:Request, res:Response){
 
 export async function addVirtualPurchase(req:Request, res:Response){
     console.log(req.body);
-    res.sendStatus(200);
+    const cardData = req.body.cardData;
+    const businessId = parseInt(req.body.businessId);
+    const amount = parseInt(req.body.amount);
+
+    const newPayment = await insertVirtualPurchase(cardData, businessId, amount);
+
+    res.status(200).send(newPayment);
 }
