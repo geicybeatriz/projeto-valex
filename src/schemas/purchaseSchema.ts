@@ -6,3 +6,12 @@ export const purchaseSchema = Joi.object({
     businessId: Joi.string().required(), 
     amount: Joi.number().integer().positive().required()
 });
+
+export const virtualPurchaseSchema = Joi.object({
+    number: Joi.string().required(),
+    name: Joi.string().required(),
+    expDate: Joi.string().required(),
+    cvv:Joi.string().trim().pattern(new RegExp('^[0-9]{3}$')).required(),
+    businessId: Joi.string().required(), 
+    amount: Joi.number().integer().positive().required()
+});

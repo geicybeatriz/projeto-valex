@@ -11,3 +11,8 @@ export async function addPurchase(req:Request, res:Response){
     
     res.status(200).send(newPayment);
 }
+
+export async function addVirtualPurchase(req:Request, res:Response){
+    console.log(req.body);
+    res.sendStatus(200);
+}
