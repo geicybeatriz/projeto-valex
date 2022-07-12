@@ -1,7 +1,7 @@
 import { findByTypeAndEmployeeId, insert, TransactionTypes } from "../repositories/cardRepository.js";
 import { findByApiKey } from "../repositories/companyRepository.js";
 import { findById } from "../repositories/employeeRepository.js";
-import { faker } from "@faker-js/faker";
+import {faker} from "@faker-js/faker";
 import Cryptr from "cryptr";
 import dayjs from "dayjs";
 

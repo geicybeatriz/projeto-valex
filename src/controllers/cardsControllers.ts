@@ -9,7 +9,6 @@ export async function createCard(req:Request, res:Response){
     console.log(newCard);
         
     return res.status(201).send(newCard);
-    
 }
 
 export async function activateCard(req:Request, res:Response){
