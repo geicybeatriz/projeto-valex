@@ -35,11 +35,6 @@ export async function verifyCardByDetails(number:string, name:string, expiration
 }
 
 export async function insertVirtualPurchase(cardData:any, businessId:number, amount:number){
-    // const cardNumber : string = cardData.number;
-    // const cardName : string = cardData.name;
-    // const cardExpDate : string = cardData.expDate;
-    // const cardCVV : string = cardData.cvv;
-
     const card = await verifyCardByDetails(cardData.number, cardData.name, cardData.expDate);
     await verifySecurityCode(card.securityCode, cardData.cvv);
     await verifyExpirationDate(card.expirationDate);
@@ -58,6 +53,5 @@ export async function insertVirtualPurchase(cardData:any, businessId:number, amo
     };
 
     await insertPayment(newPayment);
-
     return newPayment;
 }
