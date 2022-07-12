@@ -13,7 +13,6 @@ export async function addPurchase(req:Request, res:Response){
 }
 
 export async function addVirtualPurchase(req:Request, res:Response){
-    console.log(req.body);
     const cardData = req.body.cardData;
     const businessId = parseInt(req.body.businessId);
     const amount = parseInt(req.body.amount);
