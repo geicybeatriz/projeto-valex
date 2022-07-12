@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { findByApiKey } from "../repositories/companyRepository.js";
 import { insert } from "../repositories/rechargeRepository.js";
 import { findCompanyByApiKey, verifyCardById, verifyExpirationDate, verifyIsBlocked } from "../utils/cardUtils.js";
 

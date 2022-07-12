@@ -25,7 +25,7 @@ export async function findByCardId(cardId: number) {
   return result.rows;
 }
 
-export async function insert(paymentData: PaymentInsertData) {
+export async function insertPayment(paymentData: PaymentInsertData) {
   const { cardId, businessId, amount } = paymentData;
 
   connection.query<any, [number, number, number]>(

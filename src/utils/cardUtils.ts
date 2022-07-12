@@ -1,5 +1,6 @@
-import {findById, update} from "../repositories/cardRepository.js";
+import {findById, TransactionTypes, update} from "../repositories/cardRepository.js";
 import { findByApiKey } from "../repositories/companyRepository.js";
+import { findBusinessById } from "../repositories/businessRepository.js";
 import Cryptr from "cryptr";
 import * as bcrypt from "bcrypt";
 import dayjs from "dayjs";
@@ -64,6 +65,7 @@ export async function verifyPassword(currentPassword:string, password:string){
     return decryptPass;
 }
 
+
 export async function saveNewStatus(id: number, currentStatus:boolean){
     const newStatus = !currentStatus;
     await update(id,{isBlocked:newStatus});
@@ -73,4 +75,21 @@ export async function saveNewStatus(id: number, currentStatus:boolean){
 export async function findCompanyByApiKey(apiKey:any){
     const companyExist = await findByApiKey(apiKey);
     if(!companyExist) throw {type:"notFound", message:"not found"};
+    return companyExist;
+}
+
+export async function verifyBusinessById(id:number){
+    const business = await findBusinessById(id);
+    if(!business) throw { type:"notFound", message: "business is not found"};
+    return business;
+}
+
+export async function compareTypeCardAndBusiness(cardType:TransactionTypes, businessType:TransactionTypes){
+    if(cardType !== businessType) throw {type: "unauthorized", message: "different types"};
+    return true;
+}
+
+export async function compareBalance(balance:number, amount:number){
+    if(balance < amount) throw {type: "unauthorized", message: "insufficient funds"};
+    return true;
 }
